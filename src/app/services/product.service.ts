@@ -10,8 +10,9 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  public getProducts(page : number=1, size:number=4):Observable<Product[]>{
-    return this.http.get <Product[]>(`http://localhost:8089/products?_page=${page}&_limit=${size}`);
+  public getProducts(page : number=1, size:number=4){
+    return this.http.get(`http://localhost:8089/products?_page=${page}&_limit=${size}` , {observe:'response'});
+    // {observe:'response'} pour regardeer les headers
   }
   public checkProduct(product:Product):Observable<Product>{
     return this.http.patch<Product>(`http://localhost:8089/products/${product.id}`,
