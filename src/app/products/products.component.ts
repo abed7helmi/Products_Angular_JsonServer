@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ProductService} from "../services/product.service";
 import {Product} from "../model/product.model";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -15,7 +16,9 @@ export class ProductsComponent implements OnInit{
   totalPages:number = 0;
   pageSize: number= 3;
   currentPage:number=1;
-  constructor(private productService:ProductService) {
+
+  constructor(private productService:ProductService,
+              private router : Router) {
   }
 
   ngOnInit() {
@@ -24,7 +27,7 @@ export class ProductsComponent implements OnInit{
 
   getProducts(){
 
-    this.productService.getProducts(this.currentPage,this.pageSize)
+    this.productService.getProducts(this.keyword,this.currentPage,this.pageSize)
       .subscribe({
         next : (resp) => {
           this.products=resp.body as Product[]; // pour faire le cast
@@ -63,17 +66,15 @@ export class ProductsComponent implements OnInit{
     })
   }
 
-  searchProducts() {
-    this.productService.searchProducts(this.keyword).subscribe({
-      next : value => {
-        this.products=value;
-      }
-    })
-  }
+
 
   handleGoToPage(page: number) {
     this.currentPage=page;
     this.getProducts();
 
+  }
+
+  handleEdit(product: Product) {
+    this.router.navigateByUrl(`/editProduct/${product.id}`)
   }
 }
