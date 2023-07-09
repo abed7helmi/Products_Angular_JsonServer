@@ -27,14 +27,22 @@ export class ProductsComponent implements OnInit{
     this.productService.getProducts(this.appState.productsState.keyword,this.appState.productsState.currentPage,this.appState.productsState.pageSize)
       .subscribe({
         next : (resp) => {
-          this.appState.productsState.products=resp.body as Product[]; // pour faire le cast
+          let products = resp.body as Product[]; // pour faire le cast
           let totalProducts:number=parseInt( resp.headers.get('x-total-count')!)
           //parseInt ne peut pas perser null , j'ai ajoute ! pour demande de oublier ca '
-          this.appState.productsState.totalProducts=totalProducts;
-          this.appState.productsState.totalPages= Math.floor(totalProducts/ this.appState.productsState.pageSize) // floor arrondi
+          //this.appState.productsState.totalProducts=totalProducts;
+          //this.appState.productsState.totalPages= Math.floor(totalProducts/ this.appState.productsState.pageSize) // floor arrondi
+          let totalPages =  Math.floor(totalProducts/ this.appState.productsState.pageSize) // floor arrondi
           if(totalProducts % this.appState.productsState.pageSize != 0){
-            this.appState.productsState.totalPages=this.appState.productsState.totalPages+1;
+            //this.appState.productsState.totalPages=this.appState.productsState.totalPages+1;
+            totalPages++
           }
+          this.appState.setProductState({
+            products: products,
+            totalProducts : totalProducts,
+            totalPages : totalPages
+
+          })
         },
         error : err => {
           console.log(err);

@@ -16,4 +16,9 @@ export class AppStateService {
   }
 
   constructor() { }
+
+  public setProductState(state : any) : void {
+   this.productsState={...this.productsState, ...state}
+    // ... : copier tt les attributs
+  }
 }
