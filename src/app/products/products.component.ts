@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {ProductService} from "../services/product.service";
 import {Product} from "../model/product.model";
 import {Router} from "@angular/router";
+import {AppStateService} from "../services/app-state.service";
 
 
 @Component({
@@ -11,14 +12,10 @@ import {Router} from "@angular/router";
   styleUrls: ['./products.component.css']
 })
 export class ProductsComponent implements OnInit{
-  public products :Array<Product>=[];
-  public keyword : string="";
-  totalPages:number = 0;
-  pageSize: number= 3;
-  currentPage:number=1;
+
 
   constructor(private productService:ProductService,
-              private router : Router) {
+              private router : Router, public appState : AppStateService) {
   }
 
   ngOnInit() {
@@ -27,15 +24,16 @@ export class ProductsComponent implements OnInit{
 
   getProducts(){
 
-    this.productService.getProducts(this.keyword,this.currentPage,this.pageSize)
+    this.productService.getProducts(this.appState.productsState.keyword,this.appState.productsState.currentPage,this.appState.productsState.pageSize)
       .subscribe({
         next : (resp) => {
-          this.products=resp.body as Product[]; // pour faire le cast
+          this.appState.productsState.products=resp.body as Product[]; // pour faire le cast
           let totalProducts:number=parseInt( resp.headers.get('x-total-count')!)
           //parseInt ne peut pas perser null , j'ai ajoute ! pour demande de oublier ca '
-          this.totalPages= Math.floor(totalProducts/ this.pageSize) // floor arrondi
-          if(totalProducts % this.pageSize != 0){
-            this.totalPages=this.totalPages+1;
+          this.appState.productsState.totalProducts=totalProducts;
+          this.appState.productsState.totalPages= Math.floor(totalProducts/ this.appState.productsState.pageSize) // floor arrondi
+          if(totalProducts % this.appState.productsState.pageSize != 0){
+            this.appState.productsState.totalPages=this.appState.productsState.totalPages+1;
           }
         },
         error : err => {
@@ -61,7 +59,8 @@ export class ProductsComponent implements OnInit{
     this.productService.deleteProduct(product).subscribe({
       next:value => {
         //this.getProducts();
-        this.products=this.products.filter(p=>p.id!=product.id);
+        this.appState.productsState.products=
+          this.appState.productsState.products.filter((p:any)=>p.id!=product.id);
       }
     })
   }
@@ -69,7 +68,7 @@ export class ProductsComponent implements OnInit{
 
 
   handleGoToPage(page: number) {
-    this.currentPage=page;
+    this.appState.productsState.currentPage=page;
     this.getProducts();
 
   }
