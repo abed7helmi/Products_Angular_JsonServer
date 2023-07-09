@@ -23,6 +23,7 @@ export class ProductsComponent implements OnInit{
   }
 
   getProducts(){
+    this.appState.setProductState({status:"LOADING"})
 
     this.productService.getProducts(this.appState.productsState.keyword,this.appState.productsState.currentPage,this.appState.productsState.pageSize)
       .subscribe({
@@ -40,12 +41,19 @@ export class ProductsComponent implements OnInit{
           this.appState.setProductState({
             products: products,
             totalProducts : totalProducts,
-            totalPages : totalPages
+            totalPages : totalPages,
+            status : "LOADED"
 
           })
         },
         error : err => {
           console.log(err);
+          this.appState.setProductState({
+
+            status : "ERROR",
+            errorMessage : err
+
+          })
         }
       })
 
