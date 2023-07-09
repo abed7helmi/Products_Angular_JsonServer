@@ -12,7 +12,9 @@
       </button>
     </li>
 
-    <li *ngIf="appState.productsState.status=='LOADING'">
+<!--    <li *ngIf="appState.productsState.status=='LOADING'">-->
+<!--    <li *ngIf="isLoading==true">-->
+    <li *ngIf="ls.isLoading$ | async">-->
       <div class="spinner-border ms-2" role="status">
 
       </div>
