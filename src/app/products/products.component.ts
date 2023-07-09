@@ -23,7 +23,7 @@ export class ProductsComponent implements OnInit{
   }
 
   getProducts(){
-    this.appState.setProductState({status:"LOADING"})
+    //this.appState.setProductState({status:"LOADING"})
 
     this.productService.getProducts(this.appState.productsState.keyword,this.appState.productsState.currentPage,this.appState.productsState.pageSize)
       .subscribe({
@@ -42,7 +42,7 @@ export class ProductsComponent implements OnInit{
             products: products,
             totalProducts : totalProducts,
             totalPages : totalPages,
-            status : "LOADED"
+            //status : "LOADED"
 
           })
         },
