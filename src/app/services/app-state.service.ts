@@ -17,10 +17,20 @@ export class AppStateService {
     errorMessage : ""
   }
 
+  public authState : any = {
+    isAuthenticated : false,
+    username : undefined,
+    roles : undefined,
+    token : undefined
+  }
   constructor() { }
 
   public setProductState(state : any) : void {
    this.productsState={...this.productsState, ...state}
     // ... : copier tt les attributs
+  }
+
+  public setAuthState(state : any) : void{
+      this.authState={...this.authState,...state}
   }
 }
